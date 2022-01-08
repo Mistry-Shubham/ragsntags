@@ -1,7 +1,11 @@
+import Header from './components/Header';
+import Footer from './components/Footer';
+
 const App = () => {
 	return (
 		<>
-			<h1>This is website created by using create-react-app</h1>
+			<Header />
+			<Footer />
 		</>
 	);
 };
