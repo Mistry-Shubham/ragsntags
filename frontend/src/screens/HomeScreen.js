@@ -1,4 +1,4 @@
-import { Grid, Heading, Headings } from '@chakra-ui/react';
+import { Grid, Heading } from '@chakra-ui/react';
 import Product from '../components/Product';
 import products from '../products';
 

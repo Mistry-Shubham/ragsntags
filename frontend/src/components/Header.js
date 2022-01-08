@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Flex, Heading, Box, Icon, Link } from '@chakra-ui/react';
 import {
 	MdMenu,
@@ -10,7 +11,8 @@ import {
 const MenuItems = ({ children, url }) => {
 	return (
 		<Link
-			href={url}
+			as={RouterLink}
+			to={url}
 			marginTop={{ base: 4, md: 0 }}
 			fontSize="md"
 			fontWeight="bold"
@@ -45,7 +47,7 @@ const Header = () => {
 			>
 				<Flex align="center" marginRight="5">
 					<Heading as="h1" fontWeight="bold" size="md">
-						<Link href="/" _hover={{ color: 'yellow.400' }}>
+						<Link as={RouterLink} to="/" _hover={{ color: 'yellow.400' }}>
 							Rags & Tags
 						</Link>
 					</Heading>
@@ -64,7 +66,7 @@ const Header = () => {
 					width={{ base: 'full', md: 'auto' }}
 					alignItems="center"
 				>
-					<MenuItems url="/">
+					<MenuItems url="/cart">
 						<Flex alignItems="center">
 							<Icon
 								as={MdOutlineShoppingCart}
@@ -76,7 +78,7 @@ const Header = () => {
 						</Flex>
 					</MenuItems>
 
-					<MenuItems url="/">
+					<MenuItems url="/login">
 						<Flex alignItems="center">
 							<Icon as={MdLogin} height="4" width="4" marginRight="1" />
 							Login /
