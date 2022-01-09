@@ -1,22 +1,29 @@
 {
-  "name": "ragsntags",
-  "version": "1.0.0",
-  "description": "E-commerce Website",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Mistry-Shubham/ragsntags.git"
-  },
-  "author": "Shubham Mistry",
-  "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/Mistry-Shubham/ragsntags/issues"
-  },
-  "homepage": "https://github.com/Mistry-Shubham/ragsntags#readme",
-  "dependencies": {
-    "express": "^4.17.2"
-  }
+	"name": "ragsntags",
+	"version": "1.0.0",
+	"description": "E-commerce Website",
+	"main": "server.js",
+	"scripts": {
+		"start": "node backend/server",
+		"server": "nodemon backend/server",
+		"client": "npm start --prefix frontend",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Mistry-Shubham/ragsntags.git"
+	},
+	"author": "Shubham Mistry",
+	"license": "UNLICENSED",
+	"bugs": {
+		"url": "https://github.com/Mistry-Shubham/ragsntags/issues"
+	},
+	"homepage": "https://github.com/Mistry-Shubham/ragsntags#readme",
+	"dependencies": {
+		"express": "^4.17.2"
+	},
+	"devDependencies": {
+		"concurrently": "^7.0.0",
+		"nodemon": "^2.0.15"
+	}
 }
