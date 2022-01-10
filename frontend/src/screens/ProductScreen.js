@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	Flex,
@@ -9,6 +9,7 @@ import {
 	Image,
 	Button,
 	Icon,
+	Select,
 } from '@chakra-ui/react';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { listProductDetails } from '../actions/productActions';
@@ -18,7 +19,10 @@ import Rating from '../components/Rating';
 
 const ProductScreen = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { id } = useParams();
+
+	const [qty, setQty] = useState(1);
 
 	const productDetails = useSelector((state) => state.productDetails);
 	const { loading, product, error } = productDetails;
@@ -26,6 +30,10 @@ const ProductScreen = () => {
 	useEffect(() => {
 		dispatch(listProductDetails(id));
 	}, [dispatch, id]);
+
+	const addToCartHandler = () => {
+		navigate(`/cart/${id}?qty=${qty}`);
+	};
 
 	return (
 		<>
@@ -95,12 +103,35 @@ const ProductScreen = () => {
 							</Text>
 						</Flex>
 
+						<Flex
+							marginTop="4"
+							color="black"
+							justifyContent="space-between"
+							alignItems="center"
+						>
+							<Text color="whiteAlpha.900">Quantity:</Text>
+							<Select
+								width="30%"
+								background="whiteAlpha.800"
+								value={qty}
+								onChange={(e) => setQty(e.target.value)}
+								isDisabled={product.countInStock === 0}
+							>
+								{[...Array(product.countInStock).keys()].map((i) => (
+									<option key={i + 1} value={i + 1}>
+										{i + 1}
+									</option>
+								))}
+							</Select>
+						</Flex>
+
 						<Button
 							marginTop="4"
 							colorScheme="teal"
 							letterSpacing="wide"
 							_hover={{ color: 'cyan' }}
 							disabled={product.countInStock === 0}
+							onClick={addToCartHandler}
 						>
 							<Icon as={MdAddShoppingCart} marginRight="2" />
 							Add to cart
