@@ -1,5 +1,10 @@
-import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {
+	Link as RouterLink,
+	useSearchParams,
+	useNavigate,
+} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	Flex,
 	Button,
@@ -15,10 +20,30 @@ import {
 import { MdOutlineLogin, MdLaunch } from 'react-icons/md';
 import FormContainer from '../components/FormContainer';
 import Message from '../components/Message';
+import { login } from '../actions/userActions';
 
 const LoginScreen = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const [searchparams] = useSearchParams();
+	const redirect = searchparams.get('redirect') || '/';
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+
+	const userLogin = useSelector((state) => state.userLogin);
+	const { loading, userInfo, error } = userLogin;
+
+	useEffect(() => {
+		if (userInfo) {
+			navigate(redirect);
+		}
+	}, [navigate, userInfo, redirect]);
+
+	const submitHandler = (e) => {
+		e.preventDefault();
+		dispatch(login(email, password));
+	};
 
 	return (
 		<Flex width="full" justifyContent="center" alignItems="center" padding="5">
@@ -27,7 +52,9 @@ const LoginScreen = () => {
 					Login
 				</Heading>
 
-				<form>
+				{error && <Message type="error">{error}</Message>}
+
+				<form onSubmit={submitHandler}>
 					<FormControl id="email">
 						<FormLabel>Email</FormLabel>
 						<Input
@@ -62,7 +89,7 @@ const LoginScreen = () => {
 
 					<Button
 						type="submit"
-						isLoading={false}
+						isLoading={loading}
 						marginTop="3"
 						colorScheme="teal"
 						color="white"
