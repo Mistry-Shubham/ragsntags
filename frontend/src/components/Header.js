@@ -1,12 +1,29 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Flex, Heading, Box, Icon, Link } from '@chakra-ui/react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	Flex,
+	Heading,
+	Box,
+	Icon,
+	Link,
+	Menu,
+	MenuButton,
+	MenuList,
+	MenuItem,
+	Button,
+} from '@chakra-ui/react';
 import {
 	MdMenu,
 	MdOutlineShoppingCart,
 	MdLogin,
+	MdLogout,
 	MdOutlinePersonAddAlt,
+	MdArrowDropDown,
+	MdPersonOutline,
+	MdListAlt,
 } from 'react-icons/md';
+import { logout } from '../actions/userActions';
 
 const MenuItems = ({ children, url }) => {
 	return (
@@ -28,7 +45,18 @@ const MenuItems = ({ children, url }) => {
 };
 
 const Header = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+
 	const [show, setShow] = useState(false);
+
+	const loguotHandler = () => {
+		dispatch(logout());
+		navigate('/login');
+	};
 
 	return (
 		<>
@@ -78,19 +106,48 @@ const Header = () => {
 						</Flex>
 					</MenuItems>
 
-					<MenuItems url="/login">
-						<Flex alignItems="center">
-							<Icon as={MdLogin} height="4" width="4" marginRight="1" />
-							Login /
-							<Icon
-								as={MdOutlinePersonAddAlt}
-								height="4"
-								width="4"
-								marginX="1"
-							/>
-							Register
-						</Flex>
-					</MenuItems>
+					{userInfo ? (
+						<Menu>
+							<MenuButton
+								as={Button}
+								rightIcon={<MdArrowDropDown />}
+								color="black"
+							>
+								<Flex alignItems="center">
+									<Icon as={MdPersonOutline} marginRight="2" />
+									{userInfo.name.split(' ')[0]}
+								</Flex>
+							</MenuButton>
+							<MenuList color="black" background="gray.200">
+								<MenuItem as={RouterLink} to="/profile">
+									<Flex alignItems="center">
+										<Icon as={MdListAlt} marginRight="1" />
+										Profile - {userInfo.name}
+									</Flex>
+								</MenuItem>
+								<MenuItem onClick={loguotHandler}>
+									<Flex alignItems="center">
+										<Icon as={MdLogout} marginRight="1" />
+										Logout
+									</Flex>
+								</MenuItem>
+							</MenuList>
+						</Menu>
+					) : (
+						<MenuItems url="/login">
+							<Flex alignItems="center">
+								<Icon as={MdLogin} height="4" width="4" marginRight="1" />
+								Login /
+								<Icon
+									as={MdOutlinePersonAddAlt}
+									height="4"
+									width="4"
+									marginX="1"
+								/>
+								Register
+							</Flex>
+						</MenuItems>
+					)}
 				</Box>
 			</Flex>
 		</>
