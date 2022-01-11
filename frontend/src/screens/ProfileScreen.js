@@ -17,7 +17,7 @@ import {
 import { MdPublishedWithChanges } from 'react-icons/md';
 import FormContainer from '../components/FormContainer';
 import Message from '../components/Message';
-import { getUserDetails } from '../actions/userActions';
+import { getUserDetails, updateUserProfile } from '../actions/userActions';
 
 const ProfileScreen = () => {
 	const dispatch = useDispatch();
@@ -34,6 +34,9 @@ const ProfileScreen = () => {
 
 	const userDetails = useSelector((state) => state.userDetails);
 	const { loading, user, error } = userDetails;
+
+	const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+	const { success } = userUpdateProfile;
 
 	useEffect(() => {
 		if (!userInfo) {
@@ -53,7 +56,8 @@ const ProfileScreen = () => {
 		if (password !== confirmPassword) {
 			setMessage('Password do not match');
 		} else {
-			// update user actions
+			dispatch(updateUserProfile({ id: user._id, name, email, password }));
+			dispatch(getUserDetails());
 		}
 	};
 
@@ -72,6 +76,7 @@ const ProfileScreen = () => {
 
 					{error && <Message type="error">{error}</Message>}
 					{message && <Message type="error">{message}</Message>}
+					{success && <Message type="success">Profile Updated</Message>}
 
 					<form onSubmit={submitHandler}>
 						<FormControl id="name">

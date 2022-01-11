@@ -24,6 +24,7 @@ import {
 	MdListAlt,
 } from 'react-icons/md';
 import { logout } from '../actions/userActions';
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
 
 const MenuItems = ({ children, url }) => {
 	return (
@@ -52,6 +53,11 @@ const Header = () => {
 	const { userInfo } = userLogin;
 
 	const [show, setShow] = useState(false);
+
+	const profileClickHandler = () => {
+		dispatch({ type: USER_UPDATE_PROFILE_RESET });
+		navigate('/profile');
+	};
 
 	const loguotHandler = () => {
 		dispatch(logout());
@@ -119,7 +125,7 @@ const Header = () => {
 								</Flex>
 							</MenuButton>
 							<MenuList color="black" background="gray.200">
-								<MenuItem as={RouterLink} to="/profile">
+								<MenuItem onClick={profileClickHandler}>
 									<Flex alignItems="center">
 										<Icon as={MdListAlt} marginRight="1" />
 										Profile - {userInfo.name}
