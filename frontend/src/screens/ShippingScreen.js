@@ -11,6 +11,7 @@ import {
 	Spacer,
 } from '@chakra-ui/react';
 import FormContainer from '../components/FormContainer';
+import CheckoutSteps from '../components/CheckoutSteps';
 import { saveShippingAddress } from '../actions/cartActions';
 
 const ShippingScreen = () => {
@@ -36,7 +37,7 @@ const ShippingScreen = () => {
 	return (
 		<Flex width="full" justifyContent="center" alignItems="center" padding="5">
 			<FormContainer bgColor="gray.100">
-				{/* Add steps */}
+				<CheckoutSteps step1 step2 />
 
 				<Heading as="h1" marginBottom="8" fontSize="3xl">
 					Shipping Address
