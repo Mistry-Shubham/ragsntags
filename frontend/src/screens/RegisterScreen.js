@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import {
 	Link as RouterLink,
-	useSearchParams,
 	useNavigate,
+	useSearchParams,
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -13,26 +13,29 @@ import {
 	FormControl,
 	FormLabel,
 	Input,
+	Icon,
 	Link,
 	Spacer,
-	Icon,
 } from '@chakra-ui/react';
-import { MdOutlineLogin, MdLaunch } from 'react-icons/md';
+import { MdPersonAddAlt, MdLaunch } from 'react-icons/md';
 import FormContainer from '../components/FormContainer';
 import Message from '../components/Message';
-import { login } from '../actions/userActions';
+import { register } from '../actions/userActions';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [searchparams] = useSearchParams();
 	const redirect = searchparams.get('redirect') || '/';
 
+	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+	const [message, setMessage] = useState(null);
 
-	const userLogin = useSelector((state) => state.userLogin);
-	const { loading, userInfo, error } = userLogin;
+	const userRegister = useSelector((state) => state.userRegister);
+	const { loading, userInfo, error } = userRegister;
 
 	useEffect(() => {
 		if (userInfo) {
@@ -42,26 +45,47 @@ const LoginScreen = () => {
 
 	const submitHandler = (e) => {
 		e.preventDefault();
-		dispatch(login(email, password));
+		if (password !== confirmPassword) {
+			setMessage('Password do not match');
+		} else {
+			dispatch(register(name, email, password));
+		}
 	};
 
 	return (
 		<Flex width="full" justifyContent="center" alignItems="center" padding="5">
 			<FormContainer bgColor="gray.100">
 				<Heading as="h1" marginBottom="8" fontSize="3xl">
-					Login
+					Register
 				</Heading>
 
 				{error && <Message type="error">{error}</Message>}
+				{message && <Message type="error">{message}</Message>}
 
 				<form onSubmit={submitHandler}>
+					<FormControl id="name">
+						<FormLabel>Name</FormLabel>
+						<Input
+							type="text"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							placeholder="Enter your Full Name"
+							borderRadius="50px"
+							borderColor="black"
+							_hover={{ borderColor: 'gray.300' }}
+							_focus={{ background: 'white' }}
+						/>
+					</FormControl>
+
+					<Spacer height="3" />
+
 					<FormControl id="email">
 						<FormLabel>Email</FormLabel>
 						<Input
 							type="email"
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
-							placeholder="Enter your E-mail"
+							placeholder="Enter your Email"
 							borderRadius="50px"
 							borderColor="black"
 							_hover={{ borderColor: 'gray.300' }}
@@ -87,6 +111,22 @@ const LoginScreen = () => {
 
 					<Spacer height="3" />
 
+					<FormControl id="confirmPassword">
+						<FormLabel>Confirm Password</FormLabel>
+						<Input
+							type="password"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							placeholder="Re-Enter your Password"
+							borderRadius="50px"
+							borderColor="black"
+							_hover={{ borderColor: 'gray.300' }}
+							_focus={{ background: 'white' }}
+						/>
+					</FormControl>
+
+					<Spacer height="3" />
+
 					<Button
 						type="submit"
 						isLoading={loading}
@@ -96,19 +136,19 @@ const LoginScreen = () => {
 						_hover={{ color: 'cyan' }}
 						fontWeight="bold"
 					>
-						<Icon as={MdOutlineLogin} marginRight="2" />
-						Login
+						<Icon as={MdPersonAddAlt} marginRight="2" />
+						Register
 					</Button>
 				</form>
 
 				<Flex marginTop="4">
 					<Text>
-						New user, Dont have an account?{' '}
+						Already have an account?{' '}
 						<Link
 							as={RouterLink}
-							to={redirect ? `/register?redirect=${redirect}` : '/register'}
+							to={redirect ? `/login?redirect=${redirect}` : '/login'}
 						>
-							Create account <Icon as={MdLaunch} fontSize="sm" />
+							Login <Icon as={MdLaunch} fontSize="sm" />
 						</Link>
 					</Text>
 				</Flex>
@@ -117,4 +157,4 @@ const LoginScreen = () => {
 	);
 };
 
-export default LoginScreen;
+export default RegisterScreen;
