@@ -10,14 +10,17 @@ import { MdOutlineArrowForwardIos } from 'react-icons/md';
 const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
 	return (
 		<Flex justifyContent="center" marginBottom="8">
-			<Breadcrumb separator={<MdOutlineArrowForwardIos />}>
+			<Breadcrumb
+				color="whiteAlpha.800"
+				separator={<MdOutlineArrowForwardIos />}
+			>
 				<BreadcrumbItem>
 					{step1 ? (
 						<BreadcrumbLink>Login</BreadcrumbLink>
 					) : (
 						<BreadcrumbLink
 							disabled
-							color="gray.400"
+							color="whiteAlpha.400"
 							_hover={{ textDecoration: 'none' }}
 						>
 							Login
@@ -33,7 +36,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
 					) : (
 						<BreadcrumbLink
 							disabled
-							color="gray.400"
+							color="whiteAlpha.400"
 							_hover={{ textDecoration: 'none' }}
 						>
 							Shipping
@@ -49,7 +52,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
 					) : (
 						<BreadcrumbLink
 							disabled
-							color="gray.400"
+							color="whiteAlpha.400"
 							_hover={{ textDecoration: 'none' }}
 						>
 							Payment
@@ -65,7 +68,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
 					) : (
 						<BreadcrumbLink
 							disabled
-							color="gray.400"
+							color="whiteAlpha.400"
 							_hover={{ textDecoration: 'none' }}
 						>
 							Place Order

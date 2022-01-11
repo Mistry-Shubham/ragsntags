@@ -35,10 +35,16 @@ const ShippingScreen = () => {
 	};
 
 	return (
-		<Flex width="full" justifyContent="center" alignItems="center" padding="5">
-			<FormContainer bgColor="gray.100">
-				<CheckoutSteps step1 step2 />
+		<Flex
+			width="full"
+			justifyContent="center"
+			alignItems="center"
+			padding="5"
+			direction="column"
+		>
+			<CheckoutSteps step1 step2 />
 
+			<FormContainer bgColor="gray.100">
 				<Heading as="h1" marginBottom="8" fontSize="3xl">
 					Shipping Address
 				</Heading>

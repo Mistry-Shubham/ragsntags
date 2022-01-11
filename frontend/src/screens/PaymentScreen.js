@@ -37,10 +37,16 @@ const PaymentScreen = () => {
 	};
 
 	return (
-		<Flex width="full" justifyContent="center" alignItems="center" padding="5">
-			<FormContainer bgColor="gray.100">
-				<CheckoutSteps step1 step2 step3 />
+		<Flex
+			width="full"
+			justifyContent="center"
+			alignItems="center"
+			padding="5"
+			direction="column"
+		>
+			<CheckoutSteps step1 step2 step3 />
 
+			<FormContainer bgColor="gray.100">
 				<Heading as="h1" marginBottom="8" fontSize="3xl">
 					Payment Method
 				</Heading>
