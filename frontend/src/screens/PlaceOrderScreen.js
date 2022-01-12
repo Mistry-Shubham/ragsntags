@@ -1,4 +1,5 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	Flex,
@@ -12,9 +13,12 @@ import {
 } from '@chakra-ui/react';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
+import { createOrder } from '../actions/orderActions';
+import { OREDR_CREATE_RESET } from '../constants/orderConstants';
 
 const PlaceOrderScreen = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const cart = useSelector((state) => state.cart);
 
@@ -26,8 +30,29 @@ const PlaceOrderScreen = () => {
 	cart.taxPrice = (18 * cart.itemsPrice) / 100;
 	cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
+	const orderCreate = useSelector((state) => state.orderCreate);
+	const { loading, order, success, error } = orderCreate;
+
+	useEffect(() => {
+		if (success) {
+			navigate(`/order/${order._id}`);
+			dispatch({ type: OREDR_CREATE_RESET });
+		}
+	}, [navigate, dispatch, success, order]);
+
 	const placeOrderHandler = () => {
 		// Add place order action
+		dispatch(
+			createOrder({
+				orderItems: cart.cartItems,
+				shippingAddress: cart.shippingAddress,
+				paymentMethod: cart.paymentMethod,
+				itemsPrice: cart.itemsPrice,
+				shippingPrice: cart.shippingPrice,
+				taxPrice: cart.taxPrice,
+				totalPrice: cart.totalPrice,
+			})
+		);
 	};
 
 	return (
@@ -200,10 +225,13 @@ const PlaceOrderScreen = () => {
 						<Text fontWeight="bold">₹ {cart.totalPrice}</Text>
 					</Flex>
 
+					{error && <Message type="error">{error}</Message>}
+
 					<Button
 						type="button"
 						colorScheme="yellow"
 						size="lg"
+						isLoading={loading}
 						letterSpacing="wide"
 						disabled={cart.cartItems === 0}
 						onClick={placeOrderHandler}
