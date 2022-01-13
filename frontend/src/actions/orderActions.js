@@ -9,7 +9,9 @@ import {
 	OREDR_PAY_REQUEST,
 	OREDR_PAY_SUCCESS,
 	OREDR_PAY_FAIL,
-	OREDR_PAY_RESET,
+	OREDR_MY_LIST_REQUEST,
+	OREDR_MY_LIST_SUCCESS,
+	OREDR_MY_LIST_FAIL,
 } from '../constants/orderConstants';
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -98,3 +100,31 @@ export const payOrder =
 			});
 		}
 	};
+
+export const listMyOrders = () => async (dispatch, getState) => {
+	try {
+		dispatch({ type: OREDR_MY_LIST_REQUEST });
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
+		const { data } = await axios.get('/api/orders/myorders', config);
+
+		dispatch({ type: OREDR_MY_LIST_SUCCESS, payload: data });
+	} catch (err) {
+		dispatch({
+			type: OREDR_MY_LIST_FAIL,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};

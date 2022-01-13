@@ -4,20 +4,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	Flex,
 	Grid,
+	Box,
 	Button,
 	FormControl,
 	FormLabel,
 	Input,
-	Link,
 	Heading,
-	Text,
+	Table,
+	Thead,
+	Tbody,
+	Th,
+	Td,
+	Tr,
 	Spacer,
 	Icon,
 } from '@chakra-ui/react';
-import { MdPublishedWithChanges } from 'react-icons/md';
+import {
+	MdPublishedWithChanges,
+	MdCancel,
+	MdInfoOutline,
+} from 'react-icons/md';
 import FormContainer from '../components/FormContainer';
+import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { getUserDetails, updateUserProfile } from '../actions/userActions';
+import { listMyOrders } from '../actions/orderActions';
 
 const ProfileScreen = () => {
 	const dispatch = useDispatch();
@@ -38,12 +49,20 @@ const ProfileScreen = () => {
 	const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
 	const { success } = userUpdateProfile;
 
+	const orderMyList = useSelector((state) => state.orderMyList);
+	const {
+		loading: loadingOML,
+		orders: ordersOML,
+		error: errorOML,
+	} = orderMyList;
+
 	useEffect(() => {
 		if (!userInfo) {
 			navigate('/login');
 		} else {
 			if (!user.name) {
 				dispatch(getUserDetails());
+				dispatch(listMyOrders());
 			} else {
 				setName(user.name);
 				setEmail(user.email);
@@ -62,7 +81,8 @@ const ProfileScreen = () => {
 	};
 
 	return (
-		<Grid templateColumns={{ sm: '1fr', md: '1fr 1fr' }} padding="5" gap="10">
+		<Grid templateColumns={{ sm: '1fr', md: '2fr 3fr' }} padding="5" gap="10">
+			{/* 1st column */}
 			<Flex
 				width="full"
 				justifyContent="center"
@@ -157,6 +177,71 @@ const ProfileScreen = () => {
 						</Button>
 					</form>
 				</FormContainer>
+			</Flex>
+
+			{/* 2nd column */}
+			<Flex direction="column">
+				<Heading as="h2" marginY="4" color="whiteAlpha.800" fontSize="3xl">
+					My Orders
+				</Heading>
+
+				{loadingOML ? (
+					<Loader />
+				) : errorOML ? (
+					<Message type="error">{errorOML}</Message>
+				) : (
+					<Box background="white" borderRadius="lg" paddingY="2">
+						<Table variant="striped" size="sm">
+							<Thead>
+								<Tr>
+									<Th>SR.NO.</Th>
+									<Th>ID</Th>
+									<Th>DATE</Th>
+									<Th>TOTAL</Th>
+									<Th>PAID</Th>
+									<Th>DELIVERED</Th>
+									<Th></Th>
+								</Tr>
+							</Thead>
+							<Tbody>
+								{ordersOML.map((order, idx) => (
+									<Tr key={idx + 1}>
+										<Td>{idx + 1}</Td>
+										<Td>{order._id}</Td>
+										<Td>{order.createdAt.substring(0, 10)}</Td>
+										<Td>₹{order.totalPrice}</Td>
+										<Td>
+											{order.isPaid ? (
+												order.paidAt.substring(0, 10)
+											) : (
+												<Icon as={MdCancel} color="red" fontSize="2xl" />
+											)}
+										</Td>
+										<Td>
+											{order.isDelieverd ? (
+												order.deliveredAt.substring(0, 10)
+											) : (
+												<Icon as={MdCancel} color="red" fontSize="2xl" />
+											)}
+										</Td>
+										<Td>
+											<Button
+												as={RouterLink}
+												to={`/order/${order._id}`}
+												colorScheme="teal"
+												color="white"
+												_hover={{ color: 'cyan' }}
+											>
+												<Icon as={MdInfoOutline} marginRight="2" />
+												Details
+											</Button>
+										</Td>
+									</Tr>
+								))}
+							</Tbody>
+						</Table>
+					</Box>
+				)}
 			</Flex>
 		</Grid>
 	);
