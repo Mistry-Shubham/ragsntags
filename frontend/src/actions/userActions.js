@@ -17,6 +17,10 @@ import {
 	USER_UPDATE_PROFILE_FAIL,
 	USER_UPDATE_PROFILE_RESET,
 } from '../constants/userConstants';
+import {
+	OREDR_DETAILS_RESET,
+	OREDR_MY_LIST_RESET,
+} from '../constants/orderConstants';
 
 export const login = (email, password) => async (dispatch) => {
 	try {
@@ -55,6 +59,8 @@ export const logout = () => async (dispatch) => {
 	dispatch({ type: USER_REGISTER_RESET });
 	dispatch({ type: USER_DETAILS_RESET });
 	dispatch({ type: USER_UPDATE_PROFILE_RESET });
+	dispatch({ type: OREDR_DETAILS_RESET });
+	dispatch({ type: OREDR_MY_LIST_RESET });
 };
 
 export const register = (name, email, password) => async (dispatch) => {
