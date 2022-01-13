@@ -6,6 +6,7 @@ import {
 	OREDR_DETAILS_REQUEST,
 	OREDR_DETAILS_SUCCESS,
 	OREDR_DETAILS_FAIL,
+	OREDR_DETAILS_RESET,
 	OREDR_PAY_REQUEST,
 	OREDR_PAY_SUCCESS,
 	OREDR_PAY_FAIL,
@@ -38,6 +39,8 @@ export const orderDetailsReducer = (
 			return { loading: false, order: action.payload };
 		case OREDR_DETAILS_FAIL:
 			return { loading: false, error: action.payload };
+		case OREDR_DETAILS_RESET:
+			return { order: { user: {}, orderItems: [], shippingAddress: {} } };
 		default:
 			return state;
 	}
