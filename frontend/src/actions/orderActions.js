@@ -6,6 +6,10 @@ import {
 	OREDR_DETAILS_REQUEST,
 	OREDR_DETAILS_SUCCESS,
 	OREDR_DETAILS_FAIL,
+	OREDR_PAY_REQUEST,
+	OREDR_PAY_SUCCESS,
+	OREDR_PAY_FAIL,
+	OREDR_PAY_RESET,
 } from '../constants/orderConstants';
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -64,3 +68,33 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
 		});
 	}
 };
+
+export const payOrder =
+	(orderId, paymentResult) => async (dispatch, getState) => {
+		try {
+			dispatch({ type: OREDR_PAY_REQUEST });
+
+			const {
+				userLogin: { userInfo },
+			} = getState();
+
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${userInfo.token}`,
+				},
+			};
+
+			await axios.put(`/api/orders/${orderId}/pay`, paymentResult, config);
+
+			dispatch({ type: OREDR_PAY_SUCCESS });
+		} catch (err) {
+			dispatch({
+				type: OREDR_PAY_FAIL,
+				payload:
+					err.response && err.response.data.message
+						? err.response.data.message
+						: err.message,
+			});
+		}
+	};
