@@ -22,6 +22,9 @@ import {
 	MdArrowDropDown,
 	MdPersonOutline,
 	MdListAlt,
+	MdSettings,
+	MdPeopleAlt,
+	MdShoppingBag,
 } from 'react-icons/md';
 import { logout } from '../actions/userActions';
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
@@ -153,6 +156,45 @@ const Header = () => {
 								Register
 							</Flex>
 						</MenuItems>
+					)}
+
+					{/* admin menu */}
+					{userInfo && userInfo.isAdmin && (
+						<Menu>
+							<MenuButton
+								marginLeft="4"
+								as={Button}
+								rightIcon={<MdArrowDropDown />}
+								color="white"
+								backgroundColor="teal.500"
+								_hover={{ backgroundColor: 'teal.400', color: 'orange.400' }}
+							>
+								<Flex alignItems="center">
+									<Icon as={MdSettings} height="4" width="4" marginRight="1" />
+									Manage
+								</Flex>
+							</MenuButton>
+							<MenuList color="black" background="gray.200">
+								<MenuItem as={RouterLink} to="/admin/userslist">
+									<Flex alignItems="center">
+										<Icon as={MdPeopleAlt} marginRight="2" />
+										Users List
+									</Flex>
+								</MenuItem>
+								<MenuItem as={RouterLink} to="/admin/productslist">
+									<Flex alignItems="center">
+										<Icon as={MdShoppingBag} marginRight="2" />
+										Products List
+									</Flex>
+								</MenuItem>
+								<MenuItem as={RouterLink} to="/admin/orderslist">
+									<Flex alignItems="center">
+										<Icon as={MdListAlt} marginRight="2" />
+										Orders List
+									</Flex>
+								</MenuItem>
+							</MenuList>
+						</Menu>
 					)}
 				</Box>
 			</Flex>
