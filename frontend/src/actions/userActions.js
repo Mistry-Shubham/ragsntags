@@ -27,6 +27,9 @@ import {
 	USER_DETAILS_ID_SUCCESS,
 	USER_DETAILS_ID_FAIL,
 	USER_DETAILS_ID_RESET,
+	USER_UPDATE_DETAILS_REQUEST,
+	USER_UPDATE_DETAILS_SUCCESS,
+	USER_UPDATE_DETAILS_FAIL,
 } from '../constants/userConstants';
 import {
 	OREDR_DETAILS_RESET,
@@ -238,6 +241,39 @@ export const getUserDetailsById = (id) => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: USER_DETAILS_ID_FAIL,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const updateUserDetails = (user) => async (dispatch, getState) => {
+	try {
+		dispatch({ type: USER_UPDATE_DETAILS_REQUEST });
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
+		const { data } = await axios.put(
+			`/api/users/${user._id}/admin`,
+			user,
+			config
+		);
+
+		dispatch({ type: USER_UPDATE_DETAILS_SUCCESS, payload: data });
+	} catch (err) {
+		dispatch({
+			type: USER_UPDATE_DETAILS_FAIL,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message

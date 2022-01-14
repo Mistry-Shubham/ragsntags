@@ -17,7 +17,8 @@ import { MdPublishedWithChanges } from 'react-icons/md';
 import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { getUserDetailsById } from '../actions/userActions';
+import { getUserDetailsById, updateUserDetails } from '../actions/userActions';
+import { USER_UPDATE_DETAILS_RESET } from '../constants/userConstants';
 
 const UserEditScreen = () => {
 	const dispatch = useDispatch();
@@ -27,23 +28,36 @@ const UserEditScreen = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
-	console.log(isAdmin);
 
 	const userDetailsById = useSelector((state) => state.userDetailsById);
 	const { Loading, user, error } = userDetailsById;
 
+	const userUpdateDetails = useSelector((state) => state.userUpdateDetails);
+	const {
+		Loading: loadingUpdate,
+		success: successUpdate,
+		error: errorUpdate,
+	} = userUpdateDetails;
+
 	useEffect(() => {
-		if (!user.name || user._id !== userId) {
-			dispatch(getUserDetailsById(userId));
+		if (successUpdate) {
+			dispatch({ type: USER_UPDATE_DETAILS_RESET });
+			navigate('/admin/userslist');
 		} else {
-			setName(user.name);
-			setEmail(user.email);
-			setIsAdmin(user.isAdmin);
+			if (!user.name || user._id !== userId) {
+				dispatch(getUserDetailsById(userId));
+			} else {
+				setName(user.name);
+				setEmail(user.email);
+				setIsAdmin(user.isAdmin);
+			}
 		}
-	}, [dispatch, user, userId]);
+	}, [dispatch, user, userId, successUpdate, navigate]);
 
 	const submitHandler = (e) => {
 		e.preventDefault();
+		dispatch(updateUserDetails({ _id: userId, name, email, isAdmin }));
+		dispatch(getUserDetailsById(userId));
 	};
 
 	return (
@@ -69,6 +83,9 @@ const UserEditScreen = () => {
 					<Heading as="h1" marginBottom="8" fontSize="3xl">
 						Edit User
 					</Heading>
+
+					{loadingUpdate && <Loader />}
+					{errorUpdate && <Message type="error">{errorUpdate}</Message>}
 
 					{Loading ? (
 						<Loader />

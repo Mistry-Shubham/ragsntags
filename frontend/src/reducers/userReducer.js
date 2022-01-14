@@ -26,6 +26,10 @@ import {
 	USER_DETAILS_ID_SUCCESS,
 	USER_DETAILS_ID_FAIL,
 	USER_DETAILS_ID_RESET,
+	USER_UPDATE_DETAILS_REQUEST,
+	USER_UPDATE_DETAILS_SUCCESS,
+	USER_UPDATE_DETAILS_FAIL,
+	USER_UPDATE_DETAILS_RESET,
 } from '../constants/userConstants';
 
 export const userLoginReducer = (state = {}, action) => {
@@ -125,6 +129,21 @@ export const userDetailsByIdReducer = (state = { user: {} }, action) => {
 		case USER_DETAILS_ID_FAIL:
 			return { loading: false, error: action.payload };
 		case USER_DETAILS_ID_RESET:
+			return { user: {} };
+		default:
+			return state;
+	}
+};
+
+export const userUpdateDetailsReducer = (state = { user: {} }, action) => {
+	switch (action.type) {
+		case USER_UPDATE_DETAILS_REQUEST:
+			return { loading: true };
+		case USER_UPDATE_DETAILS_SUCCESS:
+			return { loading: false, user: action.payload, success: true };
+		case USER_UPDATE_DETAILS_FAIL:
+			return { loading: false, error: action.payload };
+		case USER_UPDATE_DETAILS_RESET:
 			return { user: {} };
 		default:
 			return state;

@@ -6,7 +6,6 @@ import {
 	Box,
 	Button,
 	Heading,
-	Text,
 	Icon,
 	Table,
 	Thead,
@@ -48,7 +47,7 @@ const UserListScreen = () => {
 		} else {
 			navigate('/');
 		}
-	}, [dispatch, successUserDelete]);
+	}, [dispatch, successUserDelete, userInfo, navigate]);
 
 	const deleteUserhandler = (id, name) => {
 		if (window.confirm(`Are you sure you want to delete user - ${name}`)) {
