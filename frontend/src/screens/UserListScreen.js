@@ -23,7 +23,7 @@ import {
 } from 'react-icons/md';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listUsers } from '../actions/userActions';
+import { listUsers, deleteUser } from '../actions/userActions';
 
 const UserListScreen = () => {
 	const dispatch = useDispatch();
@@ -35,17 +35,25 @@ const UserListScreen = () => {
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
+	const userDelete = useSelector((state) => state.userDelete);
+	const {
+		loading: loadingUserDelete,
+		success: successUserDelete,
+		error: errorUserDelete,
+	} = userDelete;
+
 	useEffect(() => {
 		if (userInfo && userInfo.isAdmin) {
 			dispatch(listUsers());
 		} else {
 			navigate('/');
 		}
-	}, [dispatch]);
+	}, [dispatch, successUserDelete]);
 
-	const deleteUserhandler = (id) => {
-		console.log(id);
-		// delete user fi=unction
+	const deleteUserhandler = (id, name) => {
+		if (window.confirm(`Are you sure you want to delete user - ${name}`)) {
+			dispatch(deleteUser(id));
+		}
 	};
 
 	return (
@@ -53,6 +61,9 @@ const UserListScreen = () => {
 			<Heading as="h1" marginBottom="8" fontSize="3xl" color="white">
 				Users List
 			</Heading>
+
+			{loadingUserDelete && <Loader />}
+			{errorUserDelete && <Message type="error">{errorUserDelete}</Message>}
 
 			{loading ? (
 				<Loader />
@@ -98,7 +109,7 @@ const UserListScreen = () => {
 											</Button>
 											<Button
 												colorScheme="red"
-												onClick={() => deleteUserhandler(user._id)}
+												onClick={() => deleteUserhandler(user._id, user.name)}
 												_hover={{ color: 'black' }}
 											>
 												<Icon as={MdOutlineDeleteForever} fontSize="2xl" />
