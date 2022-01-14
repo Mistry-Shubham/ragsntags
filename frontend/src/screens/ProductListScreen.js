@@ -18,7 +18,8 @@ import {
 import { MdAddBox, MdOutlineDeleteForever, MdModeEdit } from 'react-icons/md';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listProducts } from '../actions/productActions';
+import { listProducts, deleteProduct } from '../actions/productActions';
+import { PRODUCT_DELETE_RESET } from '../constants/productConstants';
 
 const ProductListScreen = () => {
 	const dispatch = useDispatch();
@@ -30,16 +31,26 @@ const ProductListScreen = () => {
 	const productList = useSelector((state) => state.productList);
 	const { loading, products, error } = productList;
 
+	const productDelete = useSelector((state) => state.productDelete);
+	const {
+		loading: loadingDelete,
+		success: successDelete,
+		error: errorDelete,
+	} = productDelete;
+
 	useEffect(() => {
 		if (userInfo && userInfo.isAdmin) {
 			dispatch(listProducts());
+			dispatch({ type: PRODUCT_DELETE_RESET });
 		} else {
 			navigate('/');
 		}
-	}, [userInfo, dispatch, navigate]);
+	}, [userInfo, dispatch, navigate, successDelete]);
 
 	const deleteProductHandler = (id, name) => {
-		// delete product acttion
+		if (window.confirm(`Are you sure you want to delete product ${name}`)) {
+			dispatch(deleteProduct(id));
+		}
 	};
 
 	const createProductHandler = () => {
@@ -63,6 +74,9 @@ const ProductListScreen = () => {
 					Create Product
 				</Button>
 			</Flex>
+
+			{loadingDelete && <Loader />}
+			{errorDelete && <Message type="error">{errorDelete}</Message>}
 
 			{loading ? (
 				<Loader />
