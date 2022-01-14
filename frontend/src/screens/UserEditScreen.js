@@ -30,7 +30,7 @@ const UserEditScreen = () => {
 	const [isAdmin, setIsAdmin] = useState(false);
 
 	const userDetailsById = useSelector((state) => state.userDetailsById);
-	const { Loading, user, error } = userDetailsById;
+	const { loading, user, error } = userDetailsById;
 
 	const userUpdateDetails = useSelector((state) => state.userUpdateDetails);
 	const {
@@ -84,10 +84,9 @@ const UserEditScreen = () => {
 						Edit User
 					</Heading>
 
-					{loadingUpdate && <Loader />}
 					{errorUpdate && <Message type="error">{errorUpdate}</Message>}
 
-					{Loading ? (
+					{loading ? (
 						<Loader />
 					) : error ? (
 						<Message type="error">{error}</Message>
@@ -141,6 +140,7 @@ const UserEditScreen = () => {
 							<Button
 								type="submit"
 								marginTop="3"
+								isLoading={loadingUpdate}
 								colorScheme="teal"
 								color="white"
 								_hover={{ color: 'cyan' }}
