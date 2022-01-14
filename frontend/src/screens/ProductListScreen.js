@@ -18,8 +18,15 @@ import {
 import { MdAddBox, MdOutlineDeleteForever, MdModeEdit } from 'react-icons/md';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listProducts, deleteProduct } from '../actions/productActions';
-import { PRODUCT_DELETE_RESET } from '../constants/productConstants';
+import {
+	listProducts,
+	deleteProduct,
+	createProduct,
+} from '../actions/productActions';
+import {
+	PRODUCT_DELETE_RESET,
+	PRODUCT_CREATE_RESET,
+} from '../constants/productConstants';
 
 const ProductListScreen = () => {
 	const dispatch = useDispatch();
@@ -38,14 +45,34 @@ const ProductListScreen = () => {
 		error: errorDelete,
 	} = productDelete;
 
+	const productCreate = useSelector((state) => state.productCreate);
+	const {
+		loading: loadingCreate,
+		product: productCreated,
+		success: successCreate,
+		error: errorCreate,
+	} = productCreate;
+
 	useEffect(() => {
 		if (userInfo && userInfo.isAdmin) {
-			dispatch(listProducts());
-			dispatch({ type: PRODUCT_DELETE_RESET });
+			if (successCreate) {
+				navigate(`/admin/product/${productCreated._id}/edit`);
+				dispatch({ type: PRODUCT_CREATE_RESET });
+			} else {
+				dispatch(listProducts());
+				dispatch({ type: PRODUCT_DELETE_RESET });
+			}
 		} else {
 			navigate('/');
 		}
-	}, [userInfo, dispatch, navigate, successDelete]);
+	}, [
+		userInfo,
+		dispatch,
+		navigate,
+		successDelete,
+		successCreate,
+		productCreated,
+	]);
 
 	const deleteProductHandler = (id, name) => {
 		if (window.confirm(`Are you sure you want to delete product ${name}`)) {
@@ -54,7 +81,7 @@ const ProductListScreen = () => {
 	};
 
 	const createProductHandler = () => {
-		// create product action
+		dispatch(createProduct());
 	};
 
 	return (
@@ -77,6 +104,9 @@ const ProductListScreen = () => {
 
 			{loadingDelete && <Loader />}
 			{errorDelete && <Message type="error">{errorDelete}</Message>}
+
+			{loadingCreate && <Loader />}
+			{errorCreate && <Message type="error">{errorCreate}</Message>}
 
 			{loading ? (
 				<Loader />
