@@ -90,9 +90,9 @@ const UserListScreen = () => {
 									</Td>
 									<Td>
 										{user.isAdmin ? (
-											<Icon as={MdVerified} color="green.500" fontSize="2xl" />
+											<Icon as={MdVerified} color="green.500" fontSize="3xl" />
 										) : (
-											<Icon as={MdCancel} color="red" fontSize="2xl" />
+											<Icon as={MdCancel} color="red" fontSize="3xl" />
 										)}
 									</Td>
 									<Td>
