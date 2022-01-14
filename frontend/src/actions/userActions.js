@@ -199,7 +199,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 			},
 		};
 
-		await axios.delete(`/api/users/${id}/delete`, config);
+		await axios.delete(`/api/users/${id}/admin`, config);
 
 		dispatch({ type: USER_DELETE_SUCCESS });
 	} catch (err) {
