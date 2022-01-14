@@ -32,8 +32,15 @@ const UserListScreen = () => {
 	const userList = useSelector((state) => state.userList);
 	const { loading, users, error } = userList;
 
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+
 	useEffect(() => {
-		dispatch(listUsers());
+		if (userInfo && userInfo.isAdmin) {
+			dispatch(listUsers());
+		} else {
+			navigate('/');
+		}
 	}, [dispatch]);
 
 	const deleteUserhandler = (id) => {
@@ -85,12 +92,14 @@ const UserListScreen = () => {
 												marginRight="4"
 												as={RouterLink}
 												to={`/admin/user/${user._id}/edit`}
+												_hover={{ color: 'cyan' }}
 											>
 												<Icon as={MdModeEdit} fontSize="2xl" />
 											</Button>
 											<Button
 												colorScheme="red"
 												onClick={() => deleteUserhandler(user._id)}
+												_hover={{ color: 'black' }}
 											>
 												<Icon as={MdOutlineDeleteForever} fontSize="2xl" />
 											</Button>
