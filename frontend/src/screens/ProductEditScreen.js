@@ -15,7 +15,11 @@ import { MdPublishedWithChanges } from 'react-icons/md';
 import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listProductDetails } from '../actions/productActions';
+import { listProductDetails, updateProduct } from '../actions/productActions';
+import {
+	PRODUCT_DETAILS_RESET,
+	PRODUCT_UPDATE_RESET,
+} from '../constants/productConstants';
 
 const ProductEditScreen = () => {
 	const dispatch = useDispatch();
@@ -34,22 +38,47 @@ const ProductEditScreen = () => {
 	const { loading, product, error } = productDetails;
 	console.log(product);
 
+	const productUpdate = useSelector((state) => state.productUpdate);
+	const {
+		loading: loadingUpdate,
+		success: successUpdate,
+		error: errorUpdate,
+	} = productUpdate;
+
 	useEffect(() => {
-		if (!product.name || product._id !== productId) {
-			dispatch(listProductDetails(productId));
+		if (successUpdate) {
+			dispatch({ type: PRODUCT_UPDATE_RESET });
+			dispatch({ type: PRODUCT_DETAILS_RESET });
+			navigate('/admin/productslist');
 		} else {
-			setName(product.name);
-			setPrice(product.price);
-			setImage(product.image);
-			setBrand(product.brand);
-			setCategory(product.category);
-			setDescription(product.description);
-			setCountInStock(product.countInStock);
+			if (!product.name || product._id !== productId) {
+				dispatch(listProductDetails(productId));
+			} else {
+				setName(product.name);
+				setPrice(product.price);
+				setImage(product.image);
+				setBrand(product.brand);
+				setCategory(product.category);
+				setDescription(product.description);
+				setCountInStock(product.countInStock);
+			}
 		}
-	}, [dispatch, productId, product]);
+	}, [dispatch, productId, product, navigate, successUpdate]);
 
 	const submitHandler = (e) => {
 		e.preventDefault();
+		dispatch(
+			updateProduct({
+				_id: productId,
+				name,
+				price,
+				image,
+				brand,
+				category,
+				description,
+				countInStock,
+			})
+		);
 	};
 
 	return (
@@ -64,6 +93,8 @@ const ProductEditScreen = () => {
 					Go Back
 				</Button>
 			</Flex>
+
+			{errorUpdate && <Message type="error">{errorUpdate}</Message>}
 
 			{loading ? (
 				<Loader />
@@ -197,6 +228,7 @@ const ProductEditScreen = () => {
 							<Button
 								type="submit"
 								marginTop="3"
+								isLoading={loadingUpdate}
 								colorScheme="teal"
 								color="white"
 								_hover={{ color: 'cyan' }}

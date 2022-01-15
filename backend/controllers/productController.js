@@ -82,7 +82,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
 		product.image = image;
 		product.category = category;
 		product.countInStock = countInStock;
-		product.numReviews = numReviews;
 		product.description = description;
 
 		const updatedProduct = await product.save();
