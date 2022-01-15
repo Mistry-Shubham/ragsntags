@@ -18,6 +18,10 @@ import {
 	OREDR_LIST_REQUEST,
 	OREDR_LIST_SUCCESS,
 	OREDR_LIST_FAIL,
+	OREDR_DELIVERY_REQUEST,
+	OREDR_DELIVERY_SUCCESS,
+	OREDR_DELIVERY_FAIL,
+	OREDR_DELIVERY_RESET,
 } from '../constants/orderConstants';
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -91,6 +95,21 @@ export const orderListReducer = (state = { orders: [] }, action) => {
 			return { loading: false, orders: action.payload };
 		case OREDR_LIST_FAIL:
 			return { loading: false, error: action.payload };
+		default:
+			return state;
+	}
+};
+
+export const orderDeliveryReducer = (state = {}, action) => {
+	switch (action.type) {
+		case OREDR_DELIVERY_REQUEST:
+			return { loading: true };
+		case OREDR_DELIVERY_SUCCESS:
+			return { loading: false, success: true };
+		case OREDR_DELIVERY_FAIL:
+			return { loading: false, error: action.payload };
+		case OREDR_DELIVERY_RESET:
+			return {};
 		default:
 			return state;
 	}

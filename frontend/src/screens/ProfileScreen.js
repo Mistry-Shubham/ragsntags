@@ -218,7 +218,7 @@ const ProfileScreen = () => {
 											)}
 										</Td>
 										<Td>
-											{order.isDelieverd ? (
+											{order.isDelivered ? (
 												order.deliveredAt.substring(0, 10)
 											) : (
 												<Icon as={MdCancel} color="red" fontSize="2xl" />

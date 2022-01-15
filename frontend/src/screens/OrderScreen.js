@@ -15,9 +15,16 @@ import {
 } from '@chakra-ui/react';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { getOrderDetails, payOrder } from '../actions/orderActions';
-import { OREDR_DETAILS_RESET } from '../constants/orderConstants';
-import { OREDR_PAY_RESET } from '../constants/orderConstants';
+import {
+	getOrderDetails,
+	payOrder,
+	deliverOrder,
+} from '../actions/orderActions';
+import {
+	OREDR_PAY_RESET,
+	OREDR_DETAILS_RESET,
+	OREDR_DELIVERY_RESET,
+} from '../constants/orderConstants';
 
 const OrderScreen = () => {
 	const dispatch = useDispatch();
@@ -36,11 +43,24 @@ const OrderScreen = () => {
 		error: errorPay,
 	} = orderPay;
 
-	useEffect(() => {
-		dispatch({ type: OREDR_DETAILS_RESET });
-	}, [orderId]);
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+
+	const orderDelivery = useSelector((state) => state.orderDelivery);
+	const {
+		loading: loadingDelivery,
+		success: successDelivery,
+		error: errorDelivery,
+	} = orderDelivery;
 
 	useEffect(() => {
+		dispatch({ type: OREDR_DETAILS_RESET });
+	}, [dispatch, orderId]);
+
+	useEffect(() => {
+		if (!userInfo) {
+			navigate('/login');
+		}
 		const addPaypalScript = async () => {
 			const { data: clientId } = await axios.get('/api/config/paypal');
 			const script = document.createElement('script');
@@ -52,8 +72,9 @@ const OrderScreen = () => {
 			};
 			document.body.appendChild(script);
 		};
-		if (!order.user.name || successPay) {
+		if (!order.user.name || successPay || successDelivery) {
 			dispatch({ type: OREDR_PAY_RESET });
+			dispatch({ type: OREDR_DELIVERY_RESET });
 			dispatch(getOrderDetails(orderId));
 		} else if (!order.ispaid) {
 			if (!window.paypal) {
@@ -62,10 +83,14 @@ const OrderScreen = () => {
 				setSdkReady(true);
 			}
 		}
-	}, [dispatch, orderId, order, successPay]);
+	}, [dispatch, orderId, order, successPay, navigate, successDelivery]);
 
 	const successPaymentHandler = (paymentResult) => {
 		dispatch(payOrder(orderId, paymentResult));
+	};
+
+	const deliveryHandler = () => {
+		dispatch(deliverOrder(order));
 	};
 
 	return loading ? (
@@ -285,6 +310,20 @@ const OrderScreen = () => {
 								/>
 							)}
 						</Box>
+					)}
+
+					{loadingDelivery && <Loader />}
+					{errorDelivery && <Message type="error">{errorDelivery}</Message>}
+					{userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+						<Button
+							type="button"
+							onClick={deliveryHandler}
+							colorScheme="teal"
+							color="white"
+							_hover={{ color: 'cyan' }}
+						>
+							Mark as Delivered
+						</Button>
 					)}
 				</Flex>
 			</Grid>
