@@ -12,6 +12,9 @@ import {
 	OREDR_MY_LIST_REQUEST,
 	OREDR_MY_LIST_SUCCESS,
 	OREDR_MY_LIST_FAIL,
+	OREDR_LIST_REQUEST,
+	OREDR_LIST_SUCCESS,
+	OREDR_LIST_FAIL,
 } from '../constants/orderConstants';
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -121,6 +124,34 @@ export const listMyOrders = () => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: OREDR_MY_LIST_FAIL,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const listOrders = () => async (dispatch, getState) => {
+	try {
+		dispatch({ type: OREDR_LIST_REQUEST });
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
+		const { data } = await axios.get('/api/orders', config);
+
+		dispatch({ type: OREDR_LIST_SUCCESS, payload: data });
+	} catch (err) {
+		dispatch({
+			type: OREDR_LIST_FAIL,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message

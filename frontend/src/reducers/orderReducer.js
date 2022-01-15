@@ -15,6 +15,9 @@ import {
 	OREDR_MY_LIST_SUCCESS,
 	OREDR_MY_LIST_FAIL,
 	OREDR_MY_LIST_RESET,
+	OREDR_LIST_REQUEST,
+	OREDR_LIST_SUCCESS,
+	OREDR_LIST_FAIL,
 } from '../constants/orderConstants';
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -75,6 +78,19 @@ export const orderMyListReducer = (state = { orders: [] }, action) => {
 			return { loading: false, error: action.payload };
 		case OREDR_MY_LIST_RESET:
 			return { orders: [] };
+		default:
+			return state;
+	}
+};
+
+export const orderListReducer = (state = { orders: [] }, action) => {
+	switch (action.type) {
+		case OREDR_LIST_REQUEST:
+			return { loading: true };
+		case OREDR_LIST_SUCCESS:
+			return { loading: false, orders: action.payload };
+		case OREDR_LIST_FAIL:
+			return { loading: false, error: action.payload };
 		default:
 			return state;
 	}

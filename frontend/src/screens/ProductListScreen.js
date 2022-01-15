@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	Flex,
@@ -7,6 +7,7 @@ import {
 	Heading,
 	Button,
 	Image,
+	Link,
 	Icon,
 	Table,
 	Thead,
