@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import {
 	Flex,
 	Heading,
@@ -33,6 +34,7 @@ const ProductEditScreen = () => {
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState(0);
 	const [countInStock, setCountInStock] = useState(0);
+	const [uploading, setUploading] = useState(false);
 
 	const productDetails = useSelector((state) => state.productDetails);
 	const { loading, product, error } = productDetails;
@@ -79,6 +81,28 @@ const ProductEditScreen = () => {
 				countInStock,
 			})
 		);
+	};
+
+	const uploadFileHandler = async (e) => {
+		const file = e.target.files[0];
+		const formData = new FormData();
+		formData.append('image', file);
+		setUploading(true);
+
+		try {
+			const config = {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			};
+
+			const { data } = await axios.post('/api/uploads', formData, config);
+			setImage(data);
+			setUploading(false);
+		} catch (err) {
+			console.error(err);
+			setUploading(false);
+		}
 	};
 
 	return (
@@ -172,6 +196,11 @@ const ProductEditScreen = () => {
 									borderColor="black"
 									_hover={{ borderColor: 'gray.300' }}
 									_focus={{ background: 'white' }}
+								/>
+								<Input
+									type="file"
+									id="image-file"
+									onChange={uploadFileHandler}
 								/>
 							</FormControl>
 

@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Product from '../models/productModel.js';
+import fs from 'fs';
 
 //@desc     Fetch all products
 //@route    GET/api/products
@@ -28,7 +29,14 @@ export const getProductById = asyncHandler(async (req, res) => {
 export const deleteProduct = asyncHandler(async (req, res) => {
 	const product = await Product.findById(req.params.id);
 
+	const filePath = `./uploads/${product.image.substring(9)}`;
+
 	if (product) {
+		fs.unlink(filePath, function (err) {
+			if (err) throw err;
+			console.log('deleted');
+		});
+
 		await product.remove();
 		res.json({ message: 'Product removed' });
 	} else {
@@ -62,16 +70,8 @@ export const createProduct = asyncHandler(async (req, res) => {
 //@route    PUT/api/products/:id
 //@access   private/admin
 export const updateProduct = asyncHandler(async (req, res) => {
-	const {
-		name,
-		price,
-		brand,
-		image,
-		category,
-		countInStock,
-		numReviews,
-		description,
-	} = req.body;
+	const { name, price, brand, image, category, countInStock, description } =
+		req.body;
 
 	const product = await Product.findById(req.params.id);
 
