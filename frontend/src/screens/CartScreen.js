@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	Flex,
 	Grid,
-	Box,
 	Button,
 	Image,
 	Heading,

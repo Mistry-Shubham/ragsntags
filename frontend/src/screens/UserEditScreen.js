@@ -9,7 +9,6 @@ import {
 	FormLabel,
 	Input,
 	Spacer,
-	Link,
 	Icon,
 	Checkbox,
 } from '@chakra-ui/react';

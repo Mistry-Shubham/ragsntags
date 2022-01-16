@@ -2,11 +2,9 @@ import { useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	Flex,
 	Box,
 	Heading,
 	Button,
-	Image,
 	Icon,
 	Table,
 	Thead,
