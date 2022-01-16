@@ -38,7 +38,6 @@ const ProductEditScreen = () => {
 
 	const productDetails = useSelector((state) => state.productDetails);
 	const { loading, product, error } = productDetails;
-	console.log(product);
 
 	const productUpdate = useSelector((state) => state.productUpdate);
 	const {
