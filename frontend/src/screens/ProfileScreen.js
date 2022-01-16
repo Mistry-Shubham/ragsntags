@@ -62,8 +62,8 @@ const ProfileScreen = () => {
 		} else {
 			if (!user.name) {
 				dispatch(getUserDetails());
-				dispatch(listMyOrders());
 			} else {
+				dispatch(listMyOrders());
 				setName(user.name);
 				setEmail(user.email);
 			}
@@ -81,7 +81,7 @@ const ProfileScreen = () => {
 	};
 
 	return (
-		<Grid templateColumns={{ sm: '1fr', md: '2fr 3fr' }} padding="5" gap="10">
+		<Grid templateColumns="2fr 3fr" padding="5" gap="10">
 			{/* 1st column */}
 			<Flex
 				width="full"

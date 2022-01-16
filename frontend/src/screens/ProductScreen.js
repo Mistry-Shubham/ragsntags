@@ -260,6 +260,7 @@ const ProductScreen = () => {
 
 						<Button
 							type="submit"
+							isLoading={loadingCreateReview}
 							colorScheme="teal"
 							color="white"
 							_hover={{ color: 'cyan' }}

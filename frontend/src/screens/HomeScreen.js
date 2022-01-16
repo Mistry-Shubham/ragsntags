@@ -27,7 +27,11 @@ const HomeScreen = () => {
 			) : error ? (
 				<Message type="error">{error}</Message>
 			) : (
-				<Grid templateColumns="repeat(4,1fr)" gap="8">
+				<Grid
+					width="auto"
+					templateColumns={{ sm: '1fr', md: 'repeat(4,1fr)' }}
+					gap="8"
+				>
 					{products.map((product) => (
 						<Product key={product._id} product={product} />
 					))}
